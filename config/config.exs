@@ -2,6 +2,8 @@ import Config
 
 config :phoney_api, ecto_repos: [PhoneyApi.Repo]
 
+config :phoney_api, ash_domains: [PhoneyApi.Contacts, PhoneyApi.Accounts]
+
 config :ash,
   allow_forbidden_field_for_relationships_by_default?: true,
   include_embedded_source_by_default?: false,
