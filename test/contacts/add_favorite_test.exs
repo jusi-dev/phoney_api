@@ -17,4 +17,42 @@ defmodule Contacts.AddFavoriteTest do
     assert {:ok, user} = User.toggle_favorite(user, contact.id)
     assert Enum.empty?(user.favorites)
   end
+
+  test "add multiple favorites" do
+    {:ok, user} =
+      User.create(%{
+        username: "user1",
+        email: "mail@test.com",
+        password: "password"
+      })
+
+    {:ok, contact1} =
+      Contact.create(%{
+        fullname: "contact1",
+        email: "mycontact@test.com",
+        phone_number: "123456789",
+        address: "1234 test street"
+      })
+
+    {:ok, contact2} =
+      Contact.create(%{
+        fullname: "contact2",
+        email: "mycontact2@test.com",
+        phone_number: "123456789",
+        address: "1234 test street"
+      })
+
+    assert {:ok, user} = User.toggle_favorite(user, contact1.id)
+    assert [favorite] = user.favorites
+    assert favorite.id == contact1.id
+
+    assert {:ok, user} = User.toggle_favorite(user, contact2.id)
+    assert [favorite1, favorite2] = user.favorites
+    assert favorite1.id == contact1.id
+    assert favorite2.id == contact2.id
+
+    assert {:ok, user} = User.toggle_favorite(user, contact1.id)
+    assert [favorite] = user.favorites
+    assert favorite.id == contact2.id
+  end
 end

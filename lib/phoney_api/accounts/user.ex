@@ -35,7 +35,7 @@ defmodule PhoneyApi.Accounts.User do
       require_atomic? false
       argument :contact_id, :uuid
 
-      change manage_relationship(:contact_id, :favorites, on_lookup: :relate, on_no_match: :error, on_match: :destroy, on_missing: :create)
+      change manage_relationship(:contact_id, :favorites, on_lookup: :relate, on_no_match: :create, on_match: :destroy, on_missing: :ignore)
     end
   end
 
