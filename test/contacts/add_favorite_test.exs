@@ -55,4 +55,54 @@ defmodule Contacts.AddFavoriteTest do
     assert [favorite] = user.favorites
     assert favorite.id == contact2.id
   end
+
+  test "multiple users add 'mc' favorites" do
+    {:ok, user1} =
+      User.create(%{
+        username: "user1",
+        email: "mail@test.com",
+        password: "password"
+      })
+
+    {:ok, user2} =
+      User.create(%{
+        username: "user2",
+        email: "mail2@test.com",
+        password: "password"
+      })
+
+    {:ok, contact1} =
+      Contact.create(%{
+        fullname: "contact1",
+        email: "mycontact@test.com",
+        phone_number: "123456789",
+        address: "1234 test street"
+      })
+
+    {:ok, contact2} =
+      Contact.create(%{
+        fullname: "contact2",
+        email: "mycontact2@test.com",
+        phone_number: "123456789",
+        address: "1234 test street"
+      })
+
+    assert {:ok, user1} = User.toggle_favorite(user1, contact1.id)
+    assert [favorite] = user1.favorites
+    assert favorite.id == contact1.id
+
+    assert {:ok, user2} = User.toggle_favorite(user2, contact1.id)
+    assert {:ok, user2} = User.toggle_favorite(user2, contact2.id)
+    assert [favorite, favorite2] = user2.favorites
+    assert favorite.id == contact1.id
+    assert favorite2.id == contact2.id
+
+    assert {:ok, user1} = User.toggle_favorite(user1, contact1.id)
+    assert [] = user1.favorites
+
+    assert {:ok, user2} = User.toggle_favorite(user2, contact1.id)
+    assert [favorite2] = user2.favorites
+    assert favorite2.id == contact2.id
+
+  end
 end
