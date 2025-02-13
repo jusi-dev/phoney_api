@@ -3,12 +3,24 @@ defmodule PhoneyApi.Accounts.User do
     data_layer: AshPostgres.DataLayer,
     domain: PhoneyApi.Accounts
 
+  identities do
+    identity :email, :email
+  end
+
+
   attributes do
     uuid_primary_key :id
 
-    attribute :email, :string, public?: true
-    attribute :username, :string, public?: true
-    attribute :password, :string, public?: true
+    attribute :email, :string, public?: true, allow_nil?: false
+    attribute :username, :string, public?: true, allow_nil?: false
+    attribute :password, :string do
+      allow_nil? false
+      public? true
+      constraints [
+        min_length: 8
+      ]
+    end
+    attribute :role, PhoneyApi.Accounts.Types.Role, public?: true
 
     create_timestamp :created_at
     update_timestamp :updated_at
@@ -29,7 +41,16 @@ defmodule PhoneyApi.Accounts.User do
   end
 
   actions do
-    defaults [:read, :destroy, create: :*, update: :*]
+    defaults [:read, :destroy, update: :*]
+
+    create :create do
+      primary? true
+      accept [:email, :username, :password, :role]
+
+      # Not sure if needed since allow_nil is false
+      validate present(:email)
+      validate present(:username)
+    end
 
     update :favorite_contact do
       require_atomic? false
