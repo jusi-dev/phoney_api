@@ -7,7 +7,12 @@ defmodule Contacts.AddFavoriteTest do
   test "add favorite" do
 
     assert {:ok, user} = User.create(%{username: "user1", email: "mail@test.com", password: "password"})
-    assert {:ok, contact} = Contact.create(%{fullname: "contact1", email: "mycontact@test.com", phone_number: "123456789", address: "1234 test street"})
+    assert {:ok, contact} = Contact.create(%{fullname: "contact1", email: "mycontact@test.com", phone_number: "123456789", address: %{
+      street: "1234 test street",
+      city: "test city",
+      state: "test state",
+      zip: "12345"
+    }})
 
     assert {:ok, user} = User.toggle_favorite(user, contact.id)
 
@@ -31,7 +36,12 @@ defmodule Contacts.AddFavoriteTest do
         fullname: "contact1",
         email: "mycontact@test.com",
         phone_number: "123456789",
-        address: "1234 test street"
+        address: %{
+          street: "1234 test street",
+          city: "test city",
+          state: "test state",
+          zip: "12345"
+        }
       })
 
     {:ok, contact2} =
@@ -39,7 +49,12 @@ defmodule Contacts.AddFavoriteTest do
         fullname: "contact2",
         email: "mycontact2@test.com",
         phone_number: "123456789",
-        address: "1234 test street"
+        address: %{
+          street: "1234 test street",
+          city: "test city",
+          state: "test state",
+          zip: "12345"
+        }
       })
 
     assert {:ok, user} = User.toggle_favorite(user, contact1.id)
@@ -76,7 +91,12 @@ defmodule Contacts.AddFavoriteTest do
         fullname: "contact1",
         email: "mycontact@test.com",
         phone_number: "123456789",
-        address: "1234 test street"
+        address: %{
+          street: "1234 test street",
+          city: "test city",
+          state: "test state",
+          zip: "12345"
+        }
       })
 
     {:ok, contact2} =
@@ -84,7 +104,12 @@ defmodule Contacts.AddFavoriteTest do
         fullname: "contact2",
         email: "mycontact2@test.com",
         phone_number: "123456789",
-        address: "1234 test street"
+        address: %{
+          street: "1234 test street",
+          city: "test city",
+          state: "test state",
+          zip: "12345"
+        }
       })
 
     assert {:ok, user1} = User.toggle_favorite(user1, contact1.id)
